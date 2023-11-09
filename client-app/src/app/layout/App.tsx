@@ -60,7 +60,11 @@ const App = () => {
   };
 
   const handleDeteleActivity = (id: string) => {
-    setActivities([...activities.filter((a) => a.id !== id)]);
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter((a) => a.id !== id)]);
+      setSubmitting(false);
+    })
   };
 
   useEffect(() => {
