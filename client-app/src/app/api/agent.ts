@@ -12,12 +12,12 @@ axios.defaults.baseURL = "http://localhost:5000/api";
 // Purely for visual interpretation of prolonged getting the data from the server
 axios.interceptors.response.use(async (response) => {
   try {
-        await sleep(1000);
-        return response;
-    } catch (error) {
-        console.error(error);
-        return await Promise.reject(error);
-    }
+    await sleep(1000);
+    return response;
+  } catch (error) {
+    console.error(error);
+    return await Promise.reject(error);
+  }
 });
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
@@ -33,6 +33,11 @@ const requests = {
 
 const Activities = {
   list: () => requests.get<Activity[]>("/activities"),
+  details: (id: string) => requests.get<Activity>(`/activities/${id}`),
+  create: (activity: Activity) => requests.post("/activities", activity),
+  update: (activity: Activity) =>
+    requests.put(`/activities/${activity.id}`, activity),
+  delete: (id: string) => requests.del<Activity>(`/activities/${id}`),
 };
 
 const agent = { Activities };
