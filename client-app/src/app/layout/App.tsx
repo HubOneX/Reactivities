@@ -5,6 +5,7 @@ import NavBar from "./NavBar";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import { v4 as uuid } from "uuid";
 import agent from "../api/agent";
+import LoadingComponent from "./LoadingComponent";
 
 const App = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -12,6 +13,7 @@ const App = () => {
     Activity | undefined
   >(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleSelectActivity = (id: string) => {
     setSelectedActivity(activities.find((activity) => activity.id === id));
@@ -53,8 +55,11 @@ const App = () => {
         parsedActivities.push(activity);
       });
       setActivities(parsedActivities);
+      setLoading(false);
     });
   }, []);
+
+  if (loading) return <LoadingComponent content="Loading app..." />;
 
   return (
     <>
