@@ -10,7 +10,6 @@ import { v4 as uuid } from "uuid";
 const ActivityForm = () => {
   const { activityStore } = useStore();
   const {
-    selectedActivity,
     createActivity,
     updateActivity,
     loading,
@@ -104,7 +103,13 @@ const ActivityForm = () => {
           content="Submit"
           loading={loading}
         />
-        <Button as={Link} to='/activities' floated="right" type="button" content="Cancel" />
+        <Button
+          as={Link}
+          to="/activities"
+          floated="right"
+          type="button"
+          content="Cancel"
+        />
       </Form>
     </Segment>
   );
