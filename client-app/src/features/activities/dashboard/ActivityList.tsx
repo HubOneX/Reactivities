@@ -15,13 +15,9 @@ const ActivityList = () => {
           <Header sub color="teal">
             {group}
           </Header>
-          <Segment>
-            <Item.Group divided>
-              {activities.map((activity) => (
-                <ActivityListItem activity={activity} key={activity.id} />
-              ))}
-            </Item.Group>
-          </Segment>
+          {activities.map((activity) => (
+            <ActivityListItem activity={activity} key={activity.id} />
+          ))}
         </Fragment>
       ))}
     </>
