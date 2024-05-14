@@ -19,10 +19,17 @@ axios.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    const { data, status } = error.response as AxiosResponse;
+    const { data, status, config } = error.response as AxiosResponse;
     switch (status) {
       case 400:
-        if (data.errors) {
+        if (!data.errors) {
+          toast.error(data);
+        } else if (
+          config.method === "get" &&
+          Object.prototype.hasOwnProperty.call(data.errors, "id")
+        ) {
+          router.navigate("/not-found");
+        } else if (data.errors) {
           const modalStateErrors = [];
           for (const key in data.errors) {
             if (data.errors[key]) {
