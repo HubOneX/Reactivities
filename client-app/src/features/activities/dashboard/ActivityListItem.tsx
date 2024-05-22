@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button, Icon, Item, Label, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+import { IActivity } from "../../../app/models/activity";
 import { format } from "date-fns";
 import ActivityListItemAttendee from "./ActivityListItemAttendee";
 
 interface Props {
-  activity: Activity;
+  activity: IActivity;
 }
 
 const ActivityListItem = ({ activity }: Props) => {

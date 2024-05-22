@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { Activity } from "../models/activity";
+import { IActivity, ActivityFormValues, Activity } from "../models/activity";
 import agent from "../api/agent";
 import { v4 as uuid } from "uuid";
 import { format } from "date-fns";
@@ -7,8 +7,8 @@ import { store } from "./store";
 import { Profile } from "../models/profile";
 
 export default class ActivityStore {
-  activityRegistry = new Map<string, Activity>();
-  selectedActivity: Activity | undefined = undefined;
+  activityRegistry = new Map<string, IActivity>();
+  selectedActivity: IActivity | undefined = undefined;
   editMode = false;
   loading = false;
   loadingInitial = false;
@@ -31,7 +31,7 @@ export default class ActivityStore {
           ? [...activities[date], activity]
           : [activity];
         return activities;
-      }, {} as { [key: string]: Activity[] })
+      }, {} as { [key: string]: IActivity[] })
     );
   }
 
@@ -70,7 +70,7 @@ export default class ActivityStore {
     }
   };
 
-  private setActivity = (activity: Activity) => {
+  private setActivity = (activity: IActivity) => {
     const user = store.userStore.user;
 
     if (user) {
@@ -95,40 +95,39 @@ export default class ActivityStore {
     this.loadingInitial = state;
   };
 
-  createActivity = async (activity: Activity) => {
-    this.loading = true;
+  createActivity = async (activity: ActivityFormValues) => {
+    const user = store.userStore.user;
+    const attendee = new Profile(user!);
     activity.id = uuid();
     try {
       await agent.Activities.create(activity);
+      const newActivity = new Activity(activity);
+      newActivity.hostUsername = user!.username;
+      newActivity.attendees = [attendee];
+      this.setActivity(newActivity);
       runInAction(() => {
-        this.activityRegistry.set(activity.id, activity);
-        this.selectedActivity = activity;
-        this.editMode = false;
-        this.loading = false;
+        this.selectedActivity = newActivity;
       });
     } catch (error) {
       console.error(error);
-      runInAction(() => {
-        this.loading = false;
-      });
     }
   };
 
-  updateActivity = async (activity: Activity) => {
-    this.loading = true;
+  updateActivity = async (activity: ActivityFormValues) => {
     try {
       await agent.Activities.update(activity);
       runInAction(() => {
-        this.activityRegistry.set(activity.id, activity);
-        this.selectedActivity = activity;
-        this.editMode = false;
-        this.loading = false;
+        if (activity.id) {
+          const updatedActivity = {
+            ...this.getActivity(activity.id),
+            ...activity,
+          };
+          this.activityRegistry.set(activity.id, updatedActivity as Activity);
+          this.selectedActivity = updatedActivity as Activity;
+        }
       });
     } catch (error) {
       console.error(error);
-      runInAction(() => {
-        this.loading = false;
-      });
     }
   };
 
