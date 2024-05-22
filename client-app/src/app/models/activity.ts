@@ -1,4 +1,4 @@
-import { Profile } from "./profile";
+import { IProfile } from "./profile";
 
 export interface Activity {
   id: string;
@@ -12,6 +12,6 @@ export interface Activity {
   isCancelled?: boolean;
   isGoing?: boolean;
   isHost?: boolean;
-  host?: Profile;
-  attendees?: Profile[];
+  host?: IProfile;
+  attendees?: IProfile[];
 }

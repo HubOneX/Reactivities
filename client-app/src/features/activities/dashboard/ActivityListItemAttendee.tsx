@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
 import { List, Image } from "semantic-ui-react";
-import { Profile } from "../../../app/models/profile";
+import { IProfile } from "../../../app/models/profile";
 import { Link } from "react-router-dom";
 
 interface Props {
-  attendees: Profile[];
+  attendees: IProfile[];
 }
 
 const ActivityListItemAttendee = ({ attendees }: Props) => {
