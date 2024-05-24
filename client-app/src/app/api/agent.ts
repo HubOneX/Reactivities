@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { router } from "../router/Routes";
 import { store } from "../stores/store";
 import { User, UserFormValues } from "../models/user";
-import { Profile } from "../models/profile";
+import { Photo, Profile } from "../models/profile";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -18,7 +18,7 @@ axios.interceptors.request.use((config) => {
   const token = store.commonStore.token;
   if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
   return config;
-  });
+});
 
 // Purely for visual interpretation of prolonged getting the data from the server
 axios.interceptors.response.use(
@@ -82,11 +82,12 @@ const requests = {
 const Activities = {
   list: () => requests.get<IActivity[]>("/activities"),
   details: (id: string) => requests.get<IActivity>(`/activities/${id}`),
-  create: (activity: ActivityFormValues) => requests.post("/activities", activity),
+  create: (activity: ActivityFormValues) =>
+    requests.post("/activities", activity),
   update: (activity: ActivityFormValues) =>
     requests.put(`/activities/${activity.id}`, activity),
   delete: (id: string) => requests.del<IActivity>(`/activities/${id}`),
-  attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {})
+  attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
 };
 
 const Account = {
@@ -97,8 +98,15 @@ const Account = {
 };
 
 const Profiles = {
-  get: (username: string) => requests.get<Profile>(`/profiles/${username}`)
-}
+  get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
+  uploadPhoto: (file: Blob) => {
+    const formData = new FormData();
+    formData.append("File", file);
+    return axios.post<Photo>("photos", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+};
 
 const agent = { Activities, Account, Profiles };
 
