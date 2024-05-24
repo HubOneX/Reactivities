@@ -17,19 +17,31 @@ const ProfilePhotos = ({ profile }: Props) => {
       uploading,
       loading,
       setMainPhoto,
+      deletePhoto,
     },
   } = useStore();
   const [addPhotoMode, setAddPhotoMode] = useState(false);
-  const [target, setTarget] = useState('');
+  const [target, setTarget] = useState("");
 
   const handlePhotoUpload = (file: Blob) => {
     uploadPhoto(file).then(() => setAddPhotoMode(false));
   };
 
-  const handleSetMainPhoto = (photo: Photo, e: SyntheticEvent<HTMLButtonElement>) => {
+  const handleSetMainPhoto = (
+    photo: Photo,
+    e: SyntheticEvent<HTMLButtonElement>
+  ) => {
     setTarget(e.currentTarget.name);
-    setMainPhoto(photo)
-  }
+    setMainPhoto(photo);
+  };
+
+  const handleDeletePhoto = (
+    photo: Photo,
+    e: SyntheticEvent<HTMLButtonElement>
+  ) => {
+    setTarget(e.currentTarget.name);
+    deletePhoto(photo);
+  };
 
   return (
     <Tab.Pane>
@@ -62,12 +74,20 @@ const ProfilePhotos = ({ profile }: Props) => {
                         basic
                         color="green"
                         content="Main"
+                        name={"main" + p.id}
+                        disabled={p.isMain}
+                        loading={target === "main" + p.id && loading}
+                        onClick={(e) => handleSetMainPhoto(p, e)}
+                      />
+                      <Button
+                        basic
+                        color="red"
+                        icon="trash"
+                        loading={target === p.id && loading}
                         name={p.id}
                         disabled={p.isMain}
-                        loading={target === p.id && loading}
-                        onClick={e => handleSetMainPhoto(p, e)}
+                        onClick={(e) => handleDeletePhoto(p, e)}
                       />
-                      <Button basic color='red' icon='trash'/>
                     </Button.Group>
                   )}
                 </Card>
