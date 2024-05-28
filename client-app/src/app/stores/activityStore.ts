@@ -155,13 +155,13 @@ export default class ActivityStore {
       runInAction(() => {
         if (this.selectedActivity?.isGoing) {
           this.selectedActivity.attendees =
-            this.selectedActivity.attendees?.filter(
+            this.selectedActivity.attendees.filter(
               (a) => a.username !== user?.username
             );
           this.selectedActivity.isGoing = false;
         } else {
           const attendee = new Profile(user!);
-          this.selectedActivity!.attendees?.push(attendee);
+          this.selectedActivity!.attendees.push(attendee);
           this.selectedActivity!.isGoing = true;
         }
         this.activityRegistry.set(
@@ -198,4 +198,15 @@ export default class ActivityStore {
   clearSelectedActivity = () => {
     this.selectedActivity = undefined;
   };
+
+  updateAttendeeFollowing = (username: string) => {
+    this.activityRegistry.forEach(activity => {
+      activity.attendees.forEach(attendee => {
+        if (attendee.username === username) {
+          attendee.following ? attendee.followersCount-- : attendee.followersCount++;
+          attendee.following = !attendee.following;
+        }
+      })
+    })
+  }
 }
