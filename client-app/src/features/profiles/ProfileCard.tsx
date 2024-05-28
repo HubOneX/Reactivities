@@ -23,7 +23,7 @@ const ProfileCard = ({ profile }: Props) => {
       </Card.Content>
       <Card.Content>
         <Icon name="user" />
-        20 followers
+        {profile.followersCount} {profile.followersCount === 1 ? 'follower' : 'followers'}
       </Card.Content>
     </Card>
   );
