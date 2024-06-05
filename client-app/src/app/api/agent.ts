@@ -13,7 +13,7 @@ const sleep = (delay: number) => {
   });
 };
 
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 axios.interceptors.request.use((config) => {
   const token = store.commonStore.token;
@@ -24,7 +24,7 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   async (response) => {
     // Purely for visual interpretation of prolonged getting the data from the server
-    await sleep(1000);
+    if (import.meta.env.DEV) await sleep(1000);
 
     const pagination = response.headers["pagination"];
     if (pagination) {
@@ -92,7 +92,9 @@ const requests = {
 
 const Activities = {
   list: (params: URLSearchParams) =>
-    axios.get<PaginatedResult<IActivity[]>>("/activities", { params }).then(responseBody),
+    axios
+      .get<PaginatedResult<IActivity[]>>("/activities", { params })
+      .then(responseBody),
   details: (id: string) => requests.get<IActivity>(`/activities/${id}`),
   create: (activity: ActivityFormValues) =>
     requests.post("/activities", activity),
@@ -127,7 +129,9 @@ const Profiles = {
   listFollowings: (username: string, predicate: string) =>
     requests.get<Profile[]>(`/follow/${username}?predicate=${predicate}`),
   listActivities: (username: string, predicate: string) =>
-    requests.get<UserActivity[]>(`/profiles/${username}/activities?predicate=${predicate}`)
+    requests.get<UserActivity[]>(
+      `/profiles/${username}/activities?predicate=${predicate}`
+    ),
 };
 
 const agent = { Activities, Account, Profiles };
