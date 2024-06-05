@@ -26,10 +26,13 @@ axios.interceptors.response.use(
     // Purely for visual interpretation of prolonged getting the data from the server
     await sleep(1000);
 
-    const pagination = response.headers['pagination'];
+    const pagination = response.headers["pagination"];
     if (pagination) {
-      response.data = new PaginatedResult(response.data, JSON.parse(pagination));
-      return response as AxiosResponse<PaginatedResult<unknown>>
+      response.data = new PaginatedResult(
+        response.data,
+        JSON.parse(pagination)
+      );
+      return response as AxiosResponse<PaginatedResult<unknown>>;
     }
 
     return response;
@@ -88,7 +91,8 @@ const requests = {
 };
 
 const Activities = {
-  list: () => requests.get<PaginatedResult<IActivity[]>>("/activities"),
+  list: (params: URLSearchParams) =>
+    axios.get<PaginatedResult<IActivity[]>>("/activities", { params }).then(responseBody),
   details: (id: string) => requests.get<IActivity>(`/activities/${id}`),
   create: (activity: ActivityFormValues) =>
     requests.post("/activities", activity),
