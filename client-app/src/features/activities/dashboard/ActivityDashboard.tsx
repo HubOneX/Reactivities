@@ -2,7 +2,6 @@ import { Grid, Loader } from "semantic-ui-react";
 import ActivityList from "./ActivityList";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
-import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useEffect, useState } from "react";
 import ActivityFilters from "./ActivityFilters";
 import { PagingParams } from "../../../app/models/pagination";

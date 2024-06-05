@@ -38,11 +38,12 @@ const PhotoWidgetDropzone = ({ setFiles }: Props) => {
   return (
     <div
       {...getRootProps()}
+      // @ts-expect-error This stying works
       style={isDragActive ? { ...dzStyles, ...dzActive } : dzStyles}
     >
       <input {...getInputProps()} />
       <Icon name="upload" size="huge" />
-      <Header content="Drop image here" /> 
+      <Header content="Drop image here" />
     </div>
   );
 };
