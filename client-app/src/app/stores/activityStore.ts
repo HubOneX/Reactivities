@@ -46,7 +46,7 @@ export default class ActivityStore {
         resetPredicate();
         this.predicate.set("isGoing", true);
         break;
-      case "isHosting":
+      case "isHost":
         resetPredicate();
         this.predicate.set("isHost", true);
         break;
